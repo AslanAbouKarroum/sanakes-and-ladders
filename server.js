@@ -15,3 +15,12 @@ app.use(express.static('public'));
 app.use('/public', express.static('public'));
 
 
+app.get('/',(req, res)=>{
+    res.sendFile(__dirname + '/public/index.html')
+})
+
+
+// Start server
+app.listen( process.env.PORT || PORT, ()=>{
+    console.log(`Server connected on ${PORT}`)
+})
