@@ -7,6 +7,7 @@ function SnakesLadders() {
     this.check=0;                // 0 to continue the game, 3 if player one win, 4 if player two win
     this.hard_bot_arr=[6,6,2,1,1,1]  // array for the hard mode that store the number of dice for the next 3 moves
     this.hard_bot_index =0;          // index has 2 task first to get the right number on the dice and the second task is to let the bot choose randomly when the index is greater than the length of the array
+    this.newGame_check = 0;          // if the user press new game when timeout function is occuring then the game will start itself because the timeout function will call the method
     this.board = {   // convert the number from bottom of the ladder to the top and from the head of the snakes to the tail
         2:38,
         7:14,
@@ -133,6 +134,7 @@ function SnakesLadders() {
         100:1
     };
     this.newGame = ()=>{
+        this.newGame_check =1;  // so the timeout function don't call any method if the new game button is pressed
         this.turn = 1;
         this.player1place = 0;
         this.player2place = 0;
@@ -145,6 +147,7 @@ function SnakesLadders() {
         checkbox_div.style.visibility= 'visible';
         two_dice_div.style.visibility= 'visible';
         two_players_div.style.visibility= 'visible';
+        document.getElementById('play').removeAttribute('disabled');
         document.getElementById('screen1').textContent = '';
         document.getElementById('screen2').textContent = '';
     };
@@ -452,6 +455,7 @@ const new_game = document.querySelector('#new_game');
 
 
 function play_now(){       // called when the play button is clicked on
+    this.newGame_check = 0;   // to reset the check button to start playing normally
     const checkbox_div = document.getElementById('checkbox_div');
     const two_dice_div = document.getElementById('two_dice_div');
     const two_players_div = document.getElementById('two_players_div');
@@ -476,7 +480,9 @@ function play_now(){       // called when the play button is clicked on
 };
 
 function timeout_function(){  
-    if(play_hard_checkbox.checked){
+    if(this.newGame_check){     // to check if the new game button was pressed during the bot turn
+        return 0;
+    }else if(play_hard_checkbox.checked){
         game.hard();
     }else if(two_dice_checkbox.checked){
         game.bot();
